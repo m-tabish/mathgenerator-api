@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 import mathgenerator as mg  # Import the mathgenerator package
-
+import os
+import  uvicorn
 app = FastAPI()
 
 @app.get("/")
@@ -47,12 +48,12 @@ def generate_math_problem(topic_id: int):
             problem, solution = result
         else:
             # If not a tuple, return the result as a string and leave solution empty
-            problem, solution = str(result) 
+            problem, solution = str(result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating math problem: {e}")
     
     return {"topic": topic_name, "problem": problem, "solution":solution}
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0",  port =port,reload=True)
